@@ -16,8 +16,10 @@
 - Screenshot 
 
 - Video Demo
+https://drive.google.com/file/d/17y-14FwV0990WQq-y01Rtncradjv4BHt/view
 
 - Website
+https://github.com/chenkrkic/employee_management.git
 
 - Features
 * JavaScript
