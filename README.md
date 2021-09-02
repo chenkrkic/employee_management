@@ -17,7 +17,7 @@
 <img width="1440" alt="Screen Shot 2021-09-01 at 10 25 52 PM" src="https://user-images.githubusercontent.com/30817557/131791667-1532af7f-2b73-4b2d-ad2a-2e1f0904f9f9.png">
 
 -Video Demo
-https://drive.google.com/file/d/17y-14FwV0990WQq-y01Rtncradjv4BHt/view
+https://drive.google.com/file/d/1hUDFs9-GOV1ZES4_TrP37gQ6cnNRY4yz/view
 
 -Website
 https://github.com/chenkrkic/employee_management.git
