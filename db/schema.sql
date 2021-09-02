@@ -3,51 +3,41 @@ CREATE DATABASE employee_management;
 
 USE employee_management;
 
-CREATE TABLE department
-(
-    id INTEGER
-    AUTO_INCREMENT PRIMARY KEY,
-  d_name VARCHAR
-    (30)
+CREATE TABLE department (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    d_name VARCHAR(30) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-    CREATE TABLE role
-    (
-        id INTEGER
-        AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR
-        (30) NOT NULL,
-  salary DECIMAL UNSIGNED NOT NULL,
-  department_id INT UNSIGNED NOT NULL,
-  INDEX dep_ind
-        (department_id),
-  CONSTRAINT fk_department FOREIGN KEY
-        (department_id) REFERENCES department
-        (id) ON
-        DELETE CASCADE
+CREATE TABLE role (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL (9,2),
+    department_id INTEGER,
+    PRIMARY KEY (id)
 );
 
-        CREATE TABLE employee
-        (
-            id INT
-            UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR
-            (30) NOT NULL,
-  last_name VARCHAR
-            (30) NOT NULL,
-  role_id INT UNSIGNED NOT NULL,
-  INDEX role_ind
-            (role_id),
-  CONSTRAINT fk_role FOREIGN KEY
-            (role_id) REFERENCES role
-            (id) ON
-            DELETE CASCADE,
-  manager_id INT UNSIGNED,
-  INDEX man_ind
-            (manager_id),
-  CONSTRAINT fk_manager FOREIGN KEY
-            (manager_id) REFERENCES employee
-            (id) ON
-            DELETE
-            SET NULL
-            );
+CREATE TABLE employee (
+    id INTEGER AUTO_INCREMENT NOT NULL,  
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INTEGER,
+    manager_id INTEGER,
+    PRIMARY KEY (id),
+    FOREIGN KEY (manager_id) REFERENCES employee(id)
+);
+
+SELECT name
+FROM department 
+LEFT JOIN role 
+ON department.id = department.id;
+
+SELECT title, salary, department_id
+FROM role 
+LEFT JOIN department
+ON role.department_id = department.id;
+
+SELECT first_name, last_name, role_id, manager_id
+FROM employee
+JOIN role
+ON employee.role_id = role.department_id; 

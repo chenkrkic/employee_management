@@ -4,7 +4,6 @@ const cTable = require('console.table');
 var mysql = require("mysql");
 const util = require("util");
 
-// Logo requirements: 
 const logo = require('asciiart-logo');
 const config = require('./package.json');
 console.log(logo(config).render());
@@ -13,8 +12,8 @@ const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "Cheeseme1",
-    database: "Employee_Tracker"
+    password: "kaka6652",
+    database: "employee_management"
 });
 
 connection.connect((err) => {
@@ -24,14 +23,12 @@ connection.connect((err) => {
         return res.send("There was an error connecting to the database.");
     } console.log("You're connected!");
 
-    // Function for inquirer to prompt data
     runSearch();
 
 })
 
 connection.query = util.promisify(connection.query);
 
-// Function for inquirer to prompt data
 function runSearch() {
     inquirer
         .prompt({
@@ -49,35 +46,24 @@ function runSearch() {
                 "Update employee role",
                 "Update employee manager"
             ]
-            // Promise 
 
         }).then(answers => {
-            // Start switch statement
             switch (answers.action) {
-                // Start new case
                 case "View all employees":
-
                     byEmployees();
                     runSearch();
-
                     break;
-                // Start new case
-                case "View all employees by department":
 
+                case "View all employees by department":
                     byDepartment();
                     runSearch();
-
                     break;
 
                 case "View all employees by manager":
-
                     byManager();
                     runSearch();
-
                     break;
 
-                // Start new case
-                // Takes further input
                 case "Add employee":
                     inquirer
                         .prompt([
@@ -119,10 +105,8 @@ function runSearch() {
                             addEmployee(answers.employeeFirst, answers.employeeLast, answers.department, answers.manager);
                             runSearch();
                         })
-
                     break;
-                // Start new case
-                // Takes further input
+
                 case "Add Department":
                     inquirer
                         .prompt([
@@ -139,13 +123,11 @@ function runSearch() {
                             },
 
                         ]).then(answers => {
-                            // Adds department to database
                             addDepartment(answers.Department);
                             runSearch();
                         })
                     break;
-                // Start new case
-                // Takes further input
+
                 case "Add Role":
                     inquirer
                         .prompt([
@@ -174,14 +156,11 @@ function runSearch() {
                             }
 
                         ]).then(answers => {
-                            // Adds role to database
                             addRole(answers.title, answers.salary, answers.department_id);
                             runSearch();
                         })
                     break;
 
-                // Start new case
-                // Takes further input
                 case "Remove employee":
                     inquirer
                         .prompt([
@@ -198,7 +177,6 @@ function runSearch() {
                         })
                     break;
 
-                // Start new case
                 case "Update employee role":
 
                     inquirer
@@ -216,15 +194,13 @@ function runSearch() {
                             }
 
                         ]).then(answers => {
-                            // Updates employee's role
                             updateByRole(answers.employeeId, answers.roleId);
                             runSearch();
 
                         })
 
                     break;
-                // Start new case
-                // Takes further input
+
                 case "Update employee manager":
 
                     inquirer
@@ -241,10 +217,8 @@ function runSearch() {
 
                             }
                         ]).then(answers => {
-                            // Updates employee's manager
                             updateByManager(answers.manager, answers.Employee);
                             runSearch();
-
                         })
 
                     break;
@@ -253,12 +227,10 @@ function runSearch() {
         });
 }
 
-// "View all employees",
+
 function byEmployees() {
 
     var results = connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.d_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;",
-
-
         function (error, results) {
             if (error) throw error
             console.table(results)
@@ -266,19 +238,16 @@ function byEmployees() {
 
 };
 
-// "View all employees by department",
 function byDepartment() {
 
     var department = connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.d_name FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id;",
-
-
-        function (error, department) {
+            function (error, department) {
             if (error) throw error
             console.table(department)
         })
 };
 
-// "View all employees by manager",
+
 function byManager() {
 
     var manager = connection.query("SELECT employee.id, employee.first_name, employee.last_name, department.d_name, employee.manager_id AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id WHERE manager_id;",
@@ -290,8 +259,6 @@ function byManager() {
         })
 };
 
-
-// "Update employee manager"
 function updateByManager(managerId, employeeId) {
 
     var updateManager = connection.query(
@@ -299,14 +266,12 @@ function updateByManager(managerId, employeeId) {
         [managerId, employeeId],
         function (error, updateManager) {
             if (error) throw error
-            // console.table(manager)
         })
 
     byManager();
 
 }
 
-// "Add employee"
 function addEmployee(employeeFirst, employeeLast, department, manager) {
 
     var add = connection.query(
@@ -315,11 +280,9 @@ function addEmployee(employeeFirst, employeeLast, department, manager) {
         function (error, add) {
             if (error) throw error
         })
-
     byEmployees();
 }
 
-// Shows departments only, without employees
 function departmentTable() {
     var depTable = connection.query("SELECT d_name FROM department;",
 
@@ -330,7 +293,6 @@ function departmentTable() {
         })
 }
 
-// "Add Department"
 function addDepartment(department) {
 
     var department = connection.query(
@@ -338,13 +300,10 @@ function addDepartment(department) {
         [department],
         function (error, department) {
             if (error) throw error
-            // console.table(manager)
         })
 
     departmentTable();
 }
-
-// Shows roles only, without employees: 
 
 function roleTable() {
     var roleT = connection.query("SELECT title, salary, department_id FROM role;",
@@ -354,7 +313,7 @@ function roleTable() {
             console.table(roleT)
         })
 }
-// "Add role"
+
 function addRole(title, salary, department_id) {
 
     var newRole = connection.query(
@@ -362,14 +321,11 @@ function addRole(title, salary, department_id) {
         [title, salary, department_id],
         function (error, newRole) {
             if (error) throw error
-            // console.table(manager)
         })
 
     roleTable();
 }
 
-
-// "Remove employee"
 function removeEmployee(id) {
 
     var add = connection.query(
@@ -382,7 +338,6 @@ function removeEmployee(id) {
     byEmployees();
 }
 
-// "Update employee role",
 function updateByRole(employeeId, roleId) {
 
     var byRole = connection.query(
